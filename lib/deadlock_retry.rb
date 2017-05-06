@@ -5,7 +5,7 @@ module DeadlockRetry
     base.extend(ClassMethods)
     base.class_eval do
       class << self
-        alias_method_chain :transaction, :deadlock_handling
+        alias_method :transaction_without_deadlock_handling, :transaction
       end
     end
   end
@@ -22,7 +22,7 @@ module DeadlockRetry
     MAXIMUM_RETRIES_ON_DEADLOCK = 3
 
 
-    def transaction_with_deadlock_handling(*objects, &block)
+    def transaction(*objects, &block)
       retry_count = 0
 
       check_innodb_status_available
